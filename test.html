@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Generate OpenAI Image</title>
+  </head>
+  <body>
+    <div style="text-align:center">
+      <h1>Generate OpenAI Image</h1>
+      <form id="image-form" onsubmit="generateImage(); return false;">
+        <label for="api-key-input">API Key:</label>
+        <input type="text" id="api-key-input" name="api-key" required><br><br>
+        <label for="image-prompt-input">Image Prompt:</label>
+        <input type="text" id="image-prompt-input" name="image-prompt" required><br><br>
+        <button type="submit">Generate Image</button>
+      </form>
+      <br><br>
+      <div id="image-container"></div>
+    </div>
+
+    <script src="https://cdn.openai.com/sdk/js/v1/openai.js"></script>
+    <script>
+      function generateImage() {
+        // Get the API key and image prompt input values
+        const apiKey = document.getElementById("api-key-input").value;
+        const imagePrompt = document.getElementById("image-prompt-input").value;
+
+        // Set the OpenAI API key
+        openai.api_key = apiKey;
+
+        // Generate the image using the OpenAI API
+        openai.Image.create({
+          prompt: imagePrompt,
+          n: 1,
+          size: "1024x1024"
+        }).then(function(response) {
+          // Get the URL of the generated image
+          const imageUrl = response.data[0].url;
+
+          // Display the generated image on the page
+          const imageContainer = document.getElementById("image-container");
+          imageContainer.innerHTML = "<img src='" + imageUrl + "'/>";
+        }).catch(function(error) {
+          // Display an error message if image generation fails
+          const imageContainer = document.getElementById("image-container");
+          imageContainer.innerHTML = "Error generating image: " + error.message;
+        });
+      }
+    </script>
+  </body>
+</html>
